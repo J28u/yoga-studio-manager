@@ -1,35 +1,41 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../services/auth.service';
+import { JSX, useState, ChangeEvent, SubmitEvent } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { authService } from "../services/auth.service";
+import { RegisterData } from "../types";
+import { AxiosError } from "axios";
 
-function Register() {
+const Register = (): JSX.Element => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<any>({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
+  const [formData, setFormData] = useState<RegisterData>({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
   });
-  const [error, setError] = useState<any>('');
-  const [loading, setLoading] = useState<any>(false);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleChange = (e: any): any => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = async (e: any): Promise<any> => {
+  const handleSubmit = async (e: SubmitEvent): Promise<void> => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await authService.register(formData);
-      navigate('/sessions');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      navigate("/sessions");
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        setError(err.response?.data?.message || "Registration failed");
+      } else {
+        setError("Registration failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -111,12 +117,12 @@ function Register() {
             disabled={loading}
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400"
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
         <p className="mt-4 text-center text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-indigo-600 hover:text-indigo-800">
             Login here
           </Link>
@@ -124,6 +130,6 @@ function Register() {
       </div>
     </div>
   );
-}
+};
 
 export default Register;

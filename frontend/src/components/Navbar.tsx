@@ -1,14 +1,15 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { authService } from '../services/auth.service';
+import { Link, useNavigate } from "react-router-dom";
+import { authService } from "../services/auth.service";
+import { JSX } from "react";
 
-function Navbar(props: any) {
+const Navbar = (): JSX.Element => {
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
   const isAuthenticated = authService.isAuthenticated();
 
-  const handleLogout = (): any => {
+  const handleLogout = (): void => {
     authService.logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -55,6 +56,6 @@ function Navbar(props: any) {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

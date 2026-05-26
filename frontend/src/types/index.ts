@@ -52,5 +52,14 @@ export interface SessionFormData {
   name: string;
   date: string;
   description: string;
-  teacherId: number;
+  teacherId?: number;
+}
+
+export type FormFieldElement =
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement;
+
+export interface ApiSuccessResponse {
+  message: string;
 }

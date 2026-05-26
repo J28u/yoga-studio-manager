@@ -1,19 +1,29 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Sessions from './pages/Sessions';
-import SessionDetail from './pages/SessionDetail';
-import SessionForm from './pages/SessionForm';
-import Profile from './pages/Profile';
-import { authService } from './services/auth.service';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Sessions from "./pages/Sessions";
+import SessionDetail from "./pages/SessionDetail";
+import SessionForm from "./pages/SessionForm";
+import Profile from "./pages/Profile";
+import { authService } from "./services/auth.service";
+import { JSX, ReactNode } from "react";
 
-function PrivateRoute({ children }: any) {
+interface PrivateRouteProps {
+  children: ReactNode;
+}
+
+function PrivateRoute({ children }: PrivateRouteProps): ReactNode {
   const isAuthenticated = authService.isAuthenticated();
   return isAuthenticated ? children : <Navigate to="/login" />;
 }
 
-function App() {
+const App = (): JSX.Element => {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
@@ -66,6 +76,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;
