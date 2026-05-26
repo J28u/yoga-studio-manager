@@ -1,8 +1,16 @@
-import { useState, useEffect, JSX, ChangeEvent, SubmitEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useState,
+  useEffect,
+  JSX,
+  ChangeEvent,
+  SubmitEvent,
+  useCallback,
+} from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { Teacher, Session, SessionFormData, FormFieldElement } from "../types";
+import axios from "axios";
 import { AxiosError } from "axios";
 
 const SessionForm = (): JSX.Element => {
@@ -22,52 +30,60 @@ const SessionForm = (): JSX.Element => {
   const user = authService.getCurrentUser();
   const token = authService.getToken();
 
-  // Redirect if not admin
-  useEffect(() => {
-    if (!user || !user.admin) {
-      navigate("/sessions");
-    }
-  }, [user, navigate]);
+  if (!user || !user.admin) return <Navigate to="/session" />;
+
+  const fetchTeachers = useCallback(
+    async (signal: AbortSignal): Promise<void> => {
+      try {
+        const response = await api.get<Teacher[]>("/teacher", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        });
+        setTeachers(response.data);
+      } catch (err: unknown) {
+        if (axios.isCancel(err)) return;
+        console.error("Failed to fetch teachers", err);
+      }
+    },
+    [token],
+  );
+
+  const fetchSession = useCallback(
+    async (signal: AbortSignal): Promise<void> => {
+      try {
+        const response = await api.get<Session>(`/session/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        });
+        const session = response.data;
+        setFormData({
+          name: session.name,
+          date: new Date(session.date).toISOString().split("T")[0],
+          description: session.description,
+          teacherId: session.teacher.id,
+        });
+      } catch (err: unknown) {
+        if (axios.isCancel(err)) return;
+        setError("Failed to load session");
+        console.error(err);
+      }
+    },
+    [id, token],
+  );
 
   useEffect(() => {
-    fetchTeachers();
+    const controller = new AbortController();
+    fetchTeachers(controller.signal);
     if (isEditMode) {
-      fetchSession();
+      fetchSession(controller.signal);
     }
-  }, [id]);
 
-  const fetchTeachers = async (): Promise<void> => {
-    try {
-      const response = await api.get<Teacher[]>("/teacher", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setTeachers(response.data);
-    } catch (err: unknown) {
-      console.error("Failed to fetch teachers", err);
-    }
-  };
-
-  const fetchSession = async (): Promise<void> => {
-    try {
-      const response = await api.get<Session>(`/session/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const session = response.data;
-      setFormData({
-        name: session.name,
-        date: new Date(session.date).toISOString().split("T")[0],
-        description: session.description,
-        teacherId: session.teacher.id,
-      });
-    } catch (err: unknown) {
-      setError("Failed to load session");
-      console.error(err);
-    }
-  };
+    return () => controller.abort();
+  }, [fetchSession, fetchTeachers]);
 
   const handleChange = (e: ChangeEvent<FormFieldElement>): void => {
     const value =

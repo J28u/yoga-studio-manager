@@ -1,10 +1,11 @@
-import { useState, useEffect, JSX } from "react";
+import { useState, useEffect, JSX, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { User, ApiSuccessResponse } from "../types";
+import axios from "axios";
 
-const Profile = (): JSX.Element => {
+const Profile = (): JSX.Element | null => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -15,28 +16,36 @@ const Profile = (): JSX.Element => {
   const token = authService.getToken();
   const isDev = import.meta.env.DEV === true;
 
-  useEffect(() => {
-    if (user) {
-      fetchUserInfo();
-    }
-  }, []);
+  const fetchUserInfo = useCallback(
+    async (signal?: AbortSignal): Promise<void> => {
+      try {
+        setLoading(true);
+        const response = await api.get<User>(`/user/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        });
+        setUserInfo(response.data);
+      } catch (err: unknown) {
+        if (axios.isCancel(err)) return;
+        setError("Failed to load user information");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?.id, token],
+  );
 
-  const fetchUserInfo = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const response = await api.get<User>(`/user/${user?.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUserInfo(response.data);
-    } catch (err: unknown) {
-      setError("Failed to load user information");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (!user) return;
+
+    const controller = new AbortController();
+    fetchUserInfo(controller.signal);
+
+    return () => controller.abort();
+  }, [fetchUserInfo]);
 
   const handleDeleteAccount = async (): Promise<void> => {
     if (
@@ -92,7 +101,7 @@ const Profile = (): JSX.Element => {
     );
   }
 
-  if (error || !userInfo) {
+  if (error) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -100,6 +109,10 @@ const Profile = (): JSX.Element => {
         </div>
       </div>
     );
+  }
+
+  if (!userInfo) {
+    return null;
   }
 
   return (

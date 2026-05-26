@@ -1,8 +1,9 @@
-import { useState, useEffect, JSX } from "react";
+import { useState, useEffect, JSX, useCallback } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { ApiSuccessResponse, Session } from "../types";
+import axios from "axios";
 
 const Sessions = (): JSX.Element => {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -11,26 +12,33 @@ const Sessions = (): JSX.Element => {
   const user = authService.getCurrentUser();
   const token = authService.getToken();
 
-  useEffect(() => {
-    fetchSessions();
-  }, []);
+  const fetchSessions = useCallback(
+    async (signal?: AbortSignal): Promise<void> => {
+      try {
+        setLoading(true);
+        const response = await api.get<Session[]>("/session", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        });
+        setSessions(response.data);
+      } catch (err: unknown) {
+        if (axios.isCancel(err)) return;
+        setError("Failed to load sessions");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [token],
+  );
 
-  const fetchSessions = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const response = await api.get<Session[]>("/session", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setSessions(response.data);
-    } catch (err: unknown) {
-      setError("Failed to load sessions");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchSessions(controller.signal); //
+    return () => controller.abort();
+  }, [fetchSessions]);
 
   const handleDelete = async (sessionId: number): Promise<void> => {
     if (!window.confirm("Are you sure you want to delete this session?")) {

@@ -1,8 +1,9 @@
-import { useState, useEffect, JSX } from "react";
+import { useState, useEffect, JSX, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { ApiSuccessResponse, Session } from "../types";
+import axios from "axios";
 
 const SessionDetail = (): JSX.Element => {
   const { id } = useParams();
@@ -13,26 +14,33 @@ const SessionDetail = (): JSX.Element => {
   const user = authService.getCurrentUser();
   const token = authService.getToken();
 
-  useEffect(() => {
-    fetchSession();
-  }, [id]);
+  const fetchSession = useCallback(
+    async (signal?: AbortSignal): Promise<void> => {
+      try {
+        setLoading(true);
+        const response = await api.get<Session>(`/session/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        });
+        setSession(response.data);
+      } catch (err: unknown) {
+        if (axios.isCancel(err)) return;
+        setError("Failed to load session details");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [id, token],
+  );
 
-  const fetchSession = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const response = await api.get<Session>(`/session/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setSession(response.data);
-    } catch (err: unknown) {
-      setError("Failed to load session details");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchSession(controller.signal);
+    return () => controller.abort();
+  }, [fetchSession]);
 
   const handleParticipate = async (): Promise<void> => {
     try {
