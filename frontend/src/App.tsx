@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Sessions from "./pages/Sessions";
 import SessionDetail from "./pages/SessionDetail";
 import SessionForm from "./pages/SessionForm";
+import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import { authService } from "./services/auth.service";
 import { JSX, ReactNode } from "react";
@@ -30,6 +31,8 @@ const App = (): JSX.Element => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/sessions" />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
+          <Route path="/404" element={<PageNotFound />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
