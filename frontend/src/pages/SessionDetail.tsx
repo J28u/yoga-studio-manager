@@ -5,7 +5,7 @@ import { authService } from "../services/auth.service";
 import { ApiSuccessResponse, Session } from "../types";
 import axios from "axios";
 
-const SessionDetail = (): JSX.Element => {
+const SessionDetail = (): JSX.Element | null => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [session, setSession] = useState<Session | null>(null);
@@ -103,14 +103,18 @@ const SessionDetail = (): JSX.Element => {
     );
   }
 
-  if (error || !session) {
+  if (error) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          {error || "Session not found"}
+          {error}
         </div>
       </div>
     );
+  }
+
+  if (!session) {
+    return null;
   }
 
   const isParticipating = user ? session.users.includes(user.id) : false;
