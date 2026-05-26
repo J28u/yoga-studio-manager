@@ -100,7 +100,7 @@ const Sessions = (): JSX.Element => {
             {sessions.map((session: Session) => (
               <div
                 key={session.id}
-                className="bg-white rounded-lg shadow-md p-6"
+                className="bg-white rounded-lg shadow-md p-6 flex flex-col"
               >
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
                   {session.name}
@@ -115,7 +115,7 @@ const Sessions = (): JSX.Element => {
                 <p className="text-gray-600 mb-4">
                   Participants: {session.users.length}
                 </p>
-                <p className="text-gray-700 mb-4 line-clamp-3">
+                <p className="text-gray-700 mb-4 line-clamp-3 flex-1">
                   {session.description}
                 </p>
 
