@@ -7,11 +7,17 @@ import {
   ConflictError,
 } from "../middleware/errors";
 import { parseId, assertIsAdmin } from "../utils/guards";
+import { SessionResponseDto } from "../dto/session/session-response.dto";
+import {
+  SessionWithParticipants,
+  Participant,
+  UpdateSession,
+} from "../dto/session/session.types";
 
 const prisma = new PrismaClient();
 
 export class SessionController {
-  async getAll(req: AuthRequest, res: Response) {
+  async getAll(req: AuthRequest, res: Response): Promise<void> {
     const sessions = await prisma.session.findMany({
       include: {
         teacher: true,
@@ -23,25 +29,27 @@ export class SessionController {
       },
     });
 
-    const response: any = sessions.map((session: any) => ({
-      id: session.id,
-      name: session.name,
-      date: session.date,
-      description: session.description,
-      teacher: {
-        id: session.teacher.id,
-        firstName: session.teacher.firstName,
-        lastName: session.teacher.lastName,
-      },
-      users: session.participants.map((p: any) => p.user.id),
-      createdAt: session.createdAt,
-      updatedAt: session.updatedAt,
-    }));
+    const response: SessionResponseDto[] = sessions.map(
+      (session: SessionWithParticipants) => ({
+        id: session.id,
+        name: session.name,
+        date: session.date,
+        description: session.description,
+        teacher: {
+          id: session.teacher.id,
+          firstName: session.teacher.firstName,
+          lastName: session.teacher.lastName,
+        },
+        users: session.participants.map((p: Participant) => p.user.id),
+        createdAt: session.createdAt,
+        updatedAt: session.updatedAt,
+      }),
+    );
 
     res.status(200).json(response);
   }
 
-  async getById(req: AuthRequest, res: Response) {
+  async getById(req: AuthRequest, res: Response): Promise<void> {
     const { id } = req.params as { id: string };
     const sessionId = parseId(id, "Session");
 
@@ -59,7 +67,7 @@ export class SessionController {
 
     if (!session) throw new NotFoundError("Session not found");
 
-    const response: any = {
+    const response: SessionResponseDto = {
       id: session.id,
       name: session.name,
       date: session.date,
@@ -69,7 +77,7 @@ export class SessionController {
         firstName: session.teacher.firstName,
         lastName: session.teacher.lastName,
       },
-      users: session.participants.map((p: any) => p.user.id),
+      users: session.participants.map((p: Participant) => p.user.id),
       createdAt: session.createdAt,
       updatedAt: session.updatedAt,
     };
@@ -77,7 +85,7 @@ export class SessionController {
     res.status(200).json(response);
   }
 
-  async create(req: AuthRequest, res: Response) {
+  async create(req: AuthRequest, res: Response): Promise<void> {
     const { name, date, description, teacherId } = req.body;
 
     if (!name) throw new BadRequestError("Name is required");
@@ -110,7 +118,7 @@ export class SessionController {
       },
     });
 
-    const response: any = {
+    const response: SessionResponseDto = {
       id: session.id,
       name: session.name,
       date: session.date,
@@ -128,7 +136,7 @@ export class SessionController {
     res.status(201).json(response);
   }
 
-  async update(req: AuthRequest, res: Response) {
+  async update(req: AuthRequest, res: Response): Promise<void> {
     const { id } = req.params as { id: string };
     const { name, date, description, teacherId } = req.body;
     const sessionId = parseId(id, "Session");
@@ -145,7 +153,7 @@ export class SessionController {
 
     if (!existingSession) throw new NotFoundError("Session not found");
 
-    const updateData: any = {};
+    const updateData: UpdateSession = {};
     if (name) updateData.name = name;
     if (date) updateData.date = new Date(date);
     if (description) updateData.description = description;
@@ -170,7 +178,7 @@ export class SessionController {
       },
     });
 
-    const response: any = {
+    const response: SessionResponseDto = {
       id: session.id,
       name: session.name,
       date: session.date,
@@ -180,7 +188,7 @@ export class SessionController {
         firstName: session.teacher.firstName,
         lastName: session.teacher.lastName,
       },
-      users: session.participants.map((p: any) => p.user.id),
+      users: session.participants.map((p: Participant) => p.user.id),
       createdAt: session.createdAt,
       updatedAt: session.updatedAt,
     };
@@ -188,7 +196,7 @@ export class SessionController {
     res.status(200).json(response);
   }
 
-  async delete(req: AuthRequest, res: Response) {
+  async delete(req: AuthRequest, res: Response): Promise<void> {
     const { id } = req.params as { id: string };
     const sessionId = parseId(id, "Session");
 
@@ -211,7 +219,7 @@ export class SessionController {
     res.status(200).json({ message: "Session deleted successfully" });
   }
 
-  async participate(req: AuthRequest, res: Response) {
+  async participate(req: AuthRequest, res: Response): Promise<void> {
     const { id, userId } = req.params as { id: string; userId: string };
     const sessionId = parseId(id, "Session");
     const participantUserId = parseId(userId, "User");
@@ -250,7 +258,7 @@ export class SessionController {
     res.status(200).json({ message: "Successfully joined the session" });
   }
 
-  async unparticipate(req: AuthRequest, res: Response) {
+  async unparticipate(req: AuthRequest, res: Response): Promise<void> {
     const { id, userId } = req.params as { id: string; userId: string };
     const sessionId = parseId(id, "Session");
     const participantUserId = parseId(userId, "User");

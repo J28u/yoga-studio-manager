@@ -3,7 +3,7 @@ import {
   NotFoundError,
   ForbiddenError,
 } from "../middleware/errors";
-import { UserDto } from "../dto/user.dto";
+import { User } from "@prisma/client";
 
 type Resource = "Session" | "User" | "Teacher";
 
@@ -14,7 +14,7 @@ export function parseId(id: string, resource: Resource): number {
   return parsedId;
 }
 
-export function assertIsAdmin(user: UserDto | null): void {
+export function assertIsAdmin(user: User | null): void {
   if (!user) throw new NotFoundError("User not found");
   if (!user.admin) throw new ForbiddenError("Admin access required");
 }

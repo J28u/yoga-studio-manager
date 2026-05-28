@@ -1,20 +1,20 @@
 import { Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Teacher } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { BadRequestError, NotFoundError } from "../middleware/errors";
+import { NotFoundError } from "../middleware/errors";
 import { parseId } from "../utils/guards";
 
 const prisma = new PrismaClient();
 
 export class TeacherController {
-  async getAll(req: AuthRequest, res: Response) {
+  async getAll(req: AuthRequest, res: Response): Promise<void> {
     const teachers = await prisma.teacher.findMany({
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    const response: any = teachers.map((teacher: any) => ({
+    const response: Teacher[] = teachers.map((teacher: Teacher) => ({
       id: teacher.id,
       firstName: teacher.firstName,
       lastName: teacher.lastName,
@@ -25,7 +25,7 @@ export class TeacherController {
     res.status(200).json(response);
   }
 
-  async getById(req: AuthRequest, res: Response) {
+  async getById(req: AuthRequest, res: Response): Promise<void> {
     const { id } = req.params as { id: string };
     const teacherId = parseId(id, "Teacher");
 
@@ -35,7 +35,7 @@ export class TeacherController {
 
     if (!teacher) throw new NotFoundError("Teacher not found");
 
-    const response: any = {
+    const response: Teacher = {
       id: teacher.id,
       firstName: teacher.firstName,
       lastName: teacher.lastName,
