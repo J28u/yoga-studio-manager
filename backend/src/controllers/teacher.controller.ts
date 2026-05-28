@@ -2,7 +2,8 @@ import { Response } from "express";
 import { PrismaClient, Teacher } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { NotFoundError } from "../middleware/errors";
-import { parseId } from "../utils/guards";
+import { parseRequest } from "../utils/guards";
+import { IdSchema } from "../dto/id.dto";
 
 const prisma = new PrismaClient();
 
@@ -26,11 +27,10 @@ export class TeacherController {
   }
 
   async getById(req: AuthRequest, res: Response): Promise<void> {
-    const { id } = req.params as { id: string };
-    const teacherId = parseId(id, "Teacher");
+    const { id } = parseRequest(req.params, IdSchema);
 
     const teacher = await prisma.teacher.findUnique({
-      where: { id: teacherId },
+      where: { id },
     });
 
     if (!teacher) throw new NotFoundError("Teacher not found");

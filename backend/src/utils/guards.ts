@@ -4,17 +4,19 @@ import {
   ForbiddenError,
 } from "../middleware/errors";
 import { User } from "@prisma/client";
-
-type Resource = "Session" | "User" | "Teacher";
-
-export function parseId(id: string, resource: Resource): number {
-  if (!id) throw new BadRequestError(`${resource} ID is required`);
-  const parsedId = parseInt(id);
-  if (isNaN(parsedId)) throw new BadRequestError(`Invalid ${resource} ID`);
-  return parsedId;
-}
+import { z, ZodType } from "zod";
+import { Request } from "express";
 
 export function assertIsAdmin(user: User | null): void {
   if (!user) throw new NotFoundError("User not found");
   if (!user.admin) throw new ForbiddenError("Admin access required");
+}
+
+export function parseRequest<T>(data: unknown, schema: ZodType<T>): T {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    throw new BadRequestError(z.prettifyError(result.error));
+  }
+
+  return result.data;
 }

@@ -1,13 +1,14 @@
 import { Response } from "express";
 import { PrismaClient, User } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { parseId } from "../utils/guards";
+import { parseRequest } from "../utils/guards";
 import {
   ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from "../middleware/errors";
 import { UserResponseDto } from "../dto/user/user-response.dto";
+import { IdSchema } from "../dto/id.dto";
 
 const prisma = new PrismaClient();
 
@@ -25,11 +26,10 @@ function toUserResponse(user: User): UserResponseDto {
 
 export class UserController {
   async getById(req: AuthRequest, res: Response): Promise<void> {
-    const { id } = req.params as { id: string };
-    const userId = parseId(id, "User");
+    const { id } = parseRequest(req.params, IdSchema);
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id },
     });
 
     if (!user) throw new NotFoundError("User not found");
@@ -48,20 +48,19 @@ export class UserController {
   }
 
   async delete(req: AuthRequest, res: Response): Promise<void> {
-    const { id } = req.params as { id: string };
-    const userId = parseId(id, "User");
+    const { id } = parseRequest(req.params, IdSchema);
 
-    if (req.userId !== userId)
+    if (req.userId !== id)
       throw new ForbiddenError("You can only delete your own account");
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id },
     });
 
     if (!user) throw new NotFoundError("User not found");
 
     await prisma.user.delete({
-      where: { id: userId },
+      where: { id },
     });
 
     res.status(200).json({ message: "User deleted successfully" });

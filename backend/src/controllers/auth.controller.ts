@@ -1,26 +1,18 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
+import { parseRequest } from "../utils/guards";
 import { generateToken } from "../utils/jwt.util";
-import {
-  BadRequestError,
-  UnauthorizedError,
-  ConflictError,
-} from "../middleware/errors";
+import { LoginSchema } from "../dto/auth/login.dto";
+import { RegisterSchema } from "../dto/auth/register.dto";
 import { AuthResponseDto } from "../dto/auth/auth-response.dto";
+import { UnauthorizedError, ConflictError } from "../middleware/errors";
 
 const prisma = new PrismaClient();
 
 export class AuthController {
   async login(req: Request, res: Response): Promise<void> {
-    const { email, password } = req.body;
-
-    if (!email) throw new BadRequestError("Email is required");
-    if (!password) throw new BadRequestError("Password is required");
-    if (typeof email !== "string")
-      throw new BadRequestError("Email must be a string");
-    if (typeof password !== "string")
-      throw new BadRequestError("Password must be a string");
+    const { email, password } = parseRequest(req.body, LoginSchema);
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -45,14 +37,10 @@ export class AuthController {
   }
 
   async register(req: Request, res: Response): Promise<void> {
-    const { email, password, firstName, lastName } = req.body;
-
-    if (!email) throw new BadRequestError("Email is required");
-    if (!password) throw new BadRequestError("Password is required");
-    if (!firstName) throw new BadRequestError("First name is required");
-    if (!lastName) throw new BadRequestError("Last name is required");
-    if (password.length < 8)
-      throw new BadRequestError("Password must be at least 8 characters");
+    const { email, password, firstName, lastName } = parseRequest(
+      req.body,
+      RegisterSchema,
+    );
 
     const existingUser = await prisma.user.findUnique({
       where: { email },

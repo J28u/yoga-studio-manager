@@ -1,18 +1,21 @@
 import { Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.middleware";
-import {
-  BadRequestError,
-  NotFoundError,
-  ConflictError,
-} from "../middleware/errors";
-import { parseId, assertIsAdmin } from "../utils/guards";
+import { NotFoundError, ConflictError } from "../middleware/errors";
+import { assertIsAdmin } from "../utils/guards";
 import { SessionResponseDto } from "../dto/session/session-response.dto";
 import {
   SessionWithParticipants,
   Participant,
   UpdateSession,
-} from "../dto/session/session.types";
+} from "../dto/session/session.interface";
+import { parseRequest } from "../utils/guards";
+import {
+  CreateSessionSchema,
+  UpdateSessionSchema,
+} from "../dto/session/session.dto";
+import { IdSchema } from "../dto/id.dto";
+import { SessionParamsSchema } from "../dto/session/session-params.dto";
 
 const prisma = new PrismaClient();
 
@@ -50,11 +53,10 @@ export class SessionController {
   }
 
   async getById(req: AuthRequest, res: Response): Promise<void> {
-    const { id } = req.params as { id: string };
-    const sessionId = parseId(id, "Session");
+    const { id } = parseRequest(req.params, IdSchema);
 
     const session = await prisma.session.findUnique({
-      where: { id: sessionId },
+      where: { id },
       include: {
         teacher: true,
         participants: {
@@ -86,12 +88,10 @@ export class SessionController {
   }
 
   async create(req: AuthRequest, res: Response): Promise<void> {
-    const { name, date, description, teacherId } = req.body;
-
-    if (!name) throw new BadRequestError("Name is required");
-    if (!date) throw new BadRequestError("Date is required");
-    if (!description) throw new BadRequestError("Description is required");
-    if (!teacherId) throw new BadRequestError("Teacher ID is required");
+    const { name, date, description, teacherId } = parseRequest(
+      req.body,
+      CreateSessionSchema,
+    );
 
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
@@ -137,9 +137,11 @@ export class SessionController {
   }
 
   async update(req: AuthRequest, res: Response): Promise<void> {
-    const { id } = req.params as { id: string };
-    const { name, date, description, teacherId } = req.body;
-    const sessionId = parseId(id, "Session");
+    const { id } = parseRequest(req.params, IdSchema);
+    const { name, date, description, teacherId } = parseRequest(
+      req.body,
+      UpdateSessionSchema,
+    );
 
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
@@ -148,7 +150,7 @@ export class SessionController {
     assertIsAdmin(user);
 
     const existingSession = await prisma.session.findUnique({
-      where: { id: sessionId },
+      where: { id },
     });
 
     if (!existingSession) throw new NotFoundError("Session not found");
@@ -166,7 +168,7 @@ export class SessionController {
     }
 
     const session = await prisma.session.update({
-      where: { id: sessionId },
+      where: { id },
       data: updateData,
       include: {
         teacher: true,
@@ -197,8 +199,7 @@ export class SessionController {
   }
 
   async delete(req: AuthRequest, res: Response): Promise<void> {
-    const { id } = req.params as { id: string };
-    const sessionId = parseId(id, "Session");
+    const { id } = parseRequest(req.params, IdSchema);
 
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
@@ -207,31 +208,29 @@ export class SessionController {
     assertIsAdmin(user);
 
     const existingSession = await prisma.session.findUnique({
-      where: { id: sessionId },
+      where: { id },
     });
 
     if (!existingSession) throw new NotFoundError("Session not found");
 
     await prisma.session.delete({
-      where: { id: sessionId },
+      where: { id },
     });
 
     res.status(200).json({ message: "Session deleted successfully" });
   }
 
   async participate(req: AuthRequest, res: Response): Promise<void> {
-    const { id, userId } = req.params as { id: string; userId: string };
-    const sessionId = parseId(id, "Session");
-    const participantUserId = parseId(userId, "User");
+    const { id, userId } = parseRequest(req.params, SessionParamsSchema);
 
     const session = await prisma.session.findUnique({
-      where: { id: sessionId },
+      where: { id },
     });
 
     if (!session) throw new NotFoundError("Session not found");
 
     const user = await prisma.user.findUnique({
-      where: { id: participantUserId },
+      where: { id: userId },
     });
 
     if (!user) throw new NotFoundError("User not found");
@@ -239,8 +238,8 @@ export class SessionController {
     const existingParticipation = await prisma.sessionParticipation.findUnique({
       where: {
         sessionId_userId: {
-          sessionId,
-          userId: participantUserId,
+          sessionId: id,
+          userId,
         },
       },
     });
@@ -250,8 +249,8 @@ export class SessionController {
 
     await prisma.sessionParticipation.create({
       data: {
-        sessionId,
-        userId: participantUserId,
+        sessionId: id,
+        userId,
       },
     });
 
@@ -259,15 +258,13 @@ export class SessionController {
   }
 
   async unparticipate(req: AuthRequest, res: Response): Promise<void> {
-    const { id, userId } = req.params as { id: string; userId: string };
-    const sessionId = parseId(id, "Session");
-    const participantUserId = parseId(userId, "User");
+    const { id, userId } = parseRequest(req.params, SessionParamsSchema);
 
     const participation = await prisma.sessionParticipation.findUnique({
       where: {
         sessionId_userId: {
-          sessionId,
-          userId: participantUserId,
+          sessionId: id,
+          userId,
         },
       },
     });
@@ -277,8 +274,8 @@ export class SessionController {
     await prisma.sessionParticipation.delete({
       where: {
         sessionId_userId: {
-          sessionId,
-          userId: participantUserId,
+          sessionId: id,
+          userId,
         },
       },
     });
