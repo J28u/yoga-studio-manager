@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdSchema } from "../id.dto";
+import { IdSchema } from "../../common/dto/id.dto";
 
 export const SessionParamsSchema = IdSchema.extend({
   userId: z.coerce.number().int().positive(),

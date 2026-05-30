@@ -2,10 +2,9 @@ import {
   BadRequestError,
   NotFoundError,
   ForbiddenError,
-} from "../middleware/errors";
+} from "../../middleware/errors";
 import { User } from "@prisma/client";
 import { z, ZodType } from "zod";
-import { Request } from "express";
 
 export function assertIsAdmin(user: User | null): void {
   if (!user) throw new NotFoundError("User not found");

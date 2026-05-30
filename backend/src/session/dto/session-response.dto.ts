@@ -1,4 +1,4 @@
-import type { TeacherDto } from "../teacher/teacher.dto";
+import type { TeacherDto } from "../../teacher/dto/teacher.dto";
 
 export interface SessionResponseDto {
   id: number;
