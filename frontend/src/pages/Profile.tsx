@@ -1,5 +1,5 @@
 import { useState, useEffect, JSX, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { User, ApiSuccessResponse } from "../types";
@@ -193,12 +193,12 @@ const Profile = (): JSX.Element | null => {
           </div>
 
           <div className="flex space-x-4">
-            <button
-              onClick={() => navigate("/sessions")}
+            <Link
+              to="/sessions"
               className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
             >
               Back to Sessions
-            </button>
+            </Link>
             <button
               onClick={handleDeleteAccount}
               className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
