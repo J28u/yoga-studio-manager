@@ -3,7 +3,7 @@ import {
   RegisterData,
   LoginCredentials,
   User,
-} from "../../types";
+} from "../../src/types";
 
 export const MOCK_LOGIN_CREDENTIALS: LoginCredentials = {
   email: "yoga@studio.com",

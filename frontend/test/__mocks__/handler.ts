@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { AuthResponse } from "../../types";
+import { AuthResponse } from "../../src/types";
 import { MOCK_USER_RESPONSE_USER, MOCK_USER_RESPONSE_ADMIN } from "./fixtures";
 
 export const handlers = [
