@@ -1,5 +1,5 @@
 import { useState, useEffect, JSX, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { ApiSuccessResponse, Session } from "../types";
@@ -163,12 +163,12 @@ const SessionDetail = (): JSX.Element | null => {
           <div className="flex space-x-4">
             {user?.admin ? (
               <>
-                <button
-                  onClick={() => navigate(`/sessions/edit/${id}`)}
+                <Link
+                  to={`/sessions/edit/${id}`}
                   className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700"
                 >
                   Edit
-                </button>
+                </Link>
                 <button
                   onClick={handleDelete}
                   className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
@@ -196,12 +196,12 @@ const SessionDetail = (): JSX.Element | null => {
               </>
             )}
 
-            <button
-              onClick={() => navigate("/sessions")}
+            <Link
+              to="/sessions"
               className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400"
             >
               Back to Sessions
-            </button>
+            </Link>
           </div>
         </div>
       </div>

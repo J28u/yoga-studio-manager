@@ -1,6 +1,10 @@
 import { http, HttpResponse } from "msw";
 import { AuthResponse } from "../../src/types";
-import { MOCK_USER_RESPONSE_USER, MOCK_USER_RESPONSE_ADMIN } from "./fixtures";
+import {
+  MOCK_USER_RESPONSE_USER,
+  MOCK_USER_RESPONSE_ADMIN,
+  MOCK_SESSION_RESPONSE,
+} from "./fixtures";
 
 export const handlers = [
   http.post<{}, { email: string; password: string }>(
@@ -46,16 +50,41 @@ export const handlers = [
     return HttpResponse.json({ message: "User not found" }, { status: 404 });
   }),
 
-  http.post("api/user/promote-admin", () => {
+  http.post("/api/user/promote-admin", () => {
     return HttpResponse.json(
       { ...MOCK_USER_RESPONSE_USER, admin: true },
       { status: 200 },
     );
   }),
 
-  http.delete("api/user/:id", () => {
+  http.delete("/api/user/:id", () => {
     return HttpResponse.json(
       { message: "User deleted successfully" },
+      { status: 200 },
+    );
+  }),
+
+  http.get("/api/session/:id", () => {
+    return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 200 });
+  }),
+
+  http.delete("/api/session/:id", () => {
+    return HttpResponse.json(
+      { message: "Session deleted successfully" },
+      { status: 200 },
+    );
+  }),
+
+  http.post("/api/session/:id/participate/:userId", () => {
+    return HttpResponse.json(
+      { message: "Successfully joined the session" },
+      { status: 200 },
+    );
+  }),
+
+  http.delete("/api/session/:id/participate/:userId", () => {
+    return HttpResponse.json(
+      { message: "Successfully left the session" },
       { status: 200 },
     );
   }),

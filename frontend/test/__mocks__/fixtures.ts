@@ -3,6 +3,7 @@ import {
   RegisterData,
   LoginCredentials,
   User,
+  Session,
 } from "../../src/types";
 
 export const MOCK_LOGIN_CREDENTIALS: LoginCredentials = {
@@ -53,4 +54,21 @@ export const MOCK_USER_RESPONSE_USER: User = {
   admin: false,
   createdAt: "2026-05-26T09:24:09.065Z",
   updatedAt: "2026-05-26T09:24:09.065Z",
+};
+
+export const MOCK_SESSION_RESPONSE: Session = {
+  id: 1,
+  name: "Yoga Vinyasa",
+  date: "2026-06-06T09:24:09.065Z",
+  description:
+    "Un cours dynamique qui synchronise le mouvement et la respiration. Idéal pour renforcer le corps et améliorer la flexibilité.",
+  teacher: { id: 1, firstName: "Margot", lastName: "Delahaye" },
+  users: [1, 3],
+  createdAt: "2026-05-26T09:24:09.065Z",
+  updatedAt: "2026-05-26T09:24:09.065Z",
+};
+
+export const MOCK_SESSION_RESPONSE_USER_JOINED: Session = {
+  ...MOCK_SESSION_RESPONSE,
+  users: [1, 2, 3],
 };
