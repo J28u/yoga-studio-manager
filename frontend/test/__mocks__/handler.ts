@@ -4,6 +4,7 @@ import {
   MOCK_USER_RESPONSE_USER,
   MOCK_USER_RESPONSE_ADMIN,
   MOCK_SESSION_RESPONSE,
+  MOCK_TEACHER_RESPONSE,
 } from "./fixtures";
 
 export const handlers = [
@@ -87,5 +88,17 @@ export const handlers = [
       { message: "Successfully left the session" },
       { status: 200 },
     );
+  }),
+
+  http.get("/api/teacher", () => {
+    return HttpResponse.json(MOCK_TEACHER_RESPONSE, { status: 200 });
+  }),
+
+  http.post("/api/session", () => {
+    return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 201 });
+  }),
+
+  http.put("/api/session/:id", () => {
+    return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 200 });
   }),
 ];

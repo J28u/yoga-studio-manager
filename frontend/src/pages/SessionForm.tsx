@@ -6,7 +6,7 @@ import {
   SubmitEvent,
   useCallback,
 } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { Teacher, Session, SessionFormData, FormFieldElement } from "../types";
@@ -141,10 +141,14 @@ const SessionForm = (): JSX.Element => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="sessionName"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Session Name
               </label>
               <input
+                id="sessionName"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -155,10 +159,14 @@ const SessionForm = (): JSX.Element => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="date"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Date
               </label>
               <input
+                id="date"
                 type="date"
                 name="date"
                 value={formData.date}
@@ -169,10 +177,14 @@ const SessionForm = (): JSX.Element => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="teacher"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Teacher
               </label>
               <select
+                id="teacher"
                 name="teacherId"
                 value={formData.teacherId}
                 onChange={handleChange}
@@ -189,10 +201,14 @@ const SessionForm = (): JSX.Element => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="description"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Description
               </label>
               <textarea
+                id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -214,13 +230,13 @@ const SessionForm = (): JSX.Element => {
                     ? "Update Session"
                     : "Create Session"}
               </button>
-              <button
+              <Link
                 type="button"
-                onClick={() => navigate("/sessions")}
+                to="/sessions"
                 className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400"
               >
                 Cancel
-              </button>
+              </Link>
             </div>
           </form>
         </div>

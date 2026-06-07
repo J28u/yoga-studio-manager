@@ -4,6 +4,7 @@ import {
   LoginCredentials,
   User,
   Session,
+  Teacher,
 } from "../../src/types";
 
 export const MOCK_LOGIN_CREDENTIALS: LoginCredentials = {
@@ -72,3 +73,27 @@ export const MOCK_SESSION_RESPONSE_USER_JOINED: Session = {
   ...MOCK_SESSION_RESPONSE,
   users: [1, 2, 3],
 };
+
+export const MOCK_TEACHER_RESPONSE: Teacher[] = [
+  {
+    id: 1,
+    firstName: "Margot",
+    lastName: "Delahaye",
+    createdAt: "2026-05-26T09:24:09.065Z",
+    updatedAt: "2026-05-26T09:24:09.065Z",
+  },
+  {
+    id: 2,
+    firstName: "David",
+    lastName: "Martin",
+    createdAt: "2026-05-30T08:12:10.065Z",
+    updatedAt: "2026-05-30T09:12:10.065Z",
+  },
+  {
+    id: 3,
+    firstName: "Helene",
+    lastName: "Thiercelin",
+    createdAt: "2026-06-02T08:12:10.065Z",
+    updatedAt: "2026-06-02T09:12:10.065Z",
+  },
+];
