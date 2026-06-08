@@ -12,17 +12,8 @@ import SessionDetail from "./pages/SessionDetail";
 import SessionForm from "./pages/SessionForm";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
-import { authService } from "./services/auth.service";
-import { JSX, ReactNode } from "react";
-
-interface PrivateRouteProps {
-  children: ReactNode;
-}
-
-function PrivateRoute({ children }: PrivateRouteProps): ReactNode {
-  const isAuthenticated = authService.isAuthenticated();
-  return isAuthenticated ? children : <Navigate to="/login" />;
-}
+import { JSX } from "react";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = (): JSX.Element => {
   return (
