@@ -5,6 +5,7 @@ import {
   MOCK_USER_RESPONSE_ADMIN,
   MOCK_SESSION_RESPONSE,
   MOCK_TEACHER_RESPONSE,
+  MOCK_SESSIONS_RESPONSE,
 } from "./fixtures";
 
 export const handlers = [
@@ -58,37 +59,43 @@ export const handlers = [
     );
   }),
 
-  http.delete("/api/user/:id", () => {
+  http.delete<{ id: string }>("/api/user/:id", () => {
     return HttpResponse.json(
       { message: "User deleted successfully" },
       { status: 200 },
     );
   }),
 
-  http.get("/api/session/:id", () => {
+  http.get<{ id: string }>("/api/session/:id", () => {
     return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 200 });
   }),
 
-  http.delete("/api/session/:id", () => {
+  http.delete<{ id: string }>("/api/session/:id", () => {
     return HttpResponse.json(
       { message: "Session deleted successfully" },
       { status: 200 },
     );
   }),
 
-  http.post("/api/session/:id/participate/:userId", () => {
-    return HttpResponse.json(
-      { message: "Successfully joined the session" },
-      { status: 200 },
-    );
-  }),
+  http.post<{ id: string; idUser: string }>(
+    "/api/session/:id/participate/:userId",
+    () => {
+      return HttpResponse.json(
+        { message: "Successfully joined the session" },
+        { status: 200 },
+      );
+    },
+  ),
 
-  http.delete("/api/session/:id/participate/:userId", () => {
-    return HttpResponse.json(
-      { message: "Successfully left the session" },
-      { status: 200 },
-    );
-  }),
+  http.delete<{ id: string; userId: string }>(
+    "/api/session/:id/participate/:userId",
+    () => {
+      return HttpResponse.json(
+        { message: "Successfully left the session" },
+        { status: 200 },
+      );
+    },
+  ),
 
   http.get("/api/teacher", () => {
     return HttpResponse.json(MOCK_TEACHER_RESPONSE, { status: 200 });
@@ -98,7 +105,11 @@ export const handlers = [
     return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 201 });
   }),
 
-  http.put("/api/session/:id", () => {
+  http.put<{ id: string }>("/api/session/:id", () => {
     return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 200 });
+  }),
+
+  http.get("api/session", () => {
+    return HttpResponse.json(MOCK_SESSIONS_RESPONSE, { status: 200 });
   }),
 ];
