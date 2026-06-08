@@ -35,6 +35,26 @@ describe("Login", () => {
     expect(screen.getByText("Register here")).toBeInTheDocument();
   });
 
+  it("should show email field as required", () => {
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText("Email")).toBeRequired();
+  });
+
+  it("should show password field as required", () => {
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText("Password")).toBeRequired();
+  });
+
   it("should disable button and show loading state on submit", async () => {
     vi.mocked(authService.login).mockImplementation(
       () => new Promise((resolve) => setTimeout(resolve, 100)),

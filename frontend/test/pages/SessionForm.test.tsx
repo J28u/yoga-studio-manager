@@ -27,10 +27,21 @@ describe("SessionForm", () => {
   beforeEach(() => vi.clearAllMocks());
 
   const expectCommonSessionFormElements = async () => {
-    expect(await screen.findByLabelText("Session Name")).toBeInTheDocument();
-    expect(await screen.findByLabelText("Date")).toBeInTheDocument();
-    expect(await screen.findByLabelText("Teacher")).toBeInTheDocument();
-    expect(await screen.findByLabelText("Description")).toBeInTheDocument();
+    const sessionNameInput = await screen.findByLabelText("Session Name");
+    expect(sessionNameInput).toBeInTheDocument();
+    expect(sessionNameInput).toBeRequired();
+
+    const dateInput = await screen.findByLabelText("Date");
+    expect(dateInput).toBeInTheDocument();
+    expect(dateInput).toBeRequired();
+
+    const teacherInput = await screen.findByLabelText("Teacher");
+    expect(teacherInput).toBeInTheDocument();
+    expect(teacherInput).toBeRequired();
+
+    const descriptionInput = await screen.findByLabelText("Description");
+    expect(descriptionInput).toBeInTheDocument();
+    expect(descriptionInput).toBeRequired();
 
     expect(
       await screen.findByRole("option", { name: "Select a teacher" }),

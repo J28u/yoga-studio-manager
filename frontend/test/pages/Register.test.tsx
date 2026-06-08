@@ -60,6 +60,19 @@ describe("Register", () => {
     );
   });
 
+  it("should require all fields", () => {
+    render(
+      <MemoryRouter>
+        <Register />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText("First Name")).toBeRequired();
+    expect(screen.getByLabelText("Last Name")).toBeRequired();
+    expect(screen.getByLabelText("Email")).toBeRequired();
+    expect(screen.getByLabelText("Password")).toBeRequired();
+  });
+
   it("should disable button and show loading state on submit", async () => {
     vi.mocked(authService.register).mockImplementation(
       () => new Promise((resolve) => setTimeout(resolve, 100)),
