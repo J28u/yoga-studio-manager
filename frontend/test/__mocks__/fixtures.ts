@@ -122,3 +122,15 @@ export const MOCK_SESSIONS_RESPONSE: Session[] = [
     updatedAt: "2026-05-28T09:24:09.065Z",
   },
 ];
+
+export const MOCK_NEW_SESSION: Session = {
+  id: 3,
+  name: "Yoga Release",
+  date: "2026-06-09T10:24:09.065Z",
+  description:
+    "In this practice you are givent the opportunity to dance with all that comes up for you. What would happen if you held yourself, like a dear friend?",
+  teacher: { id: 1, firstName: "Margot", lastName: "Delahaye" },
+  users: [1, 3],
+  createdAt: "2026-06-08T10:24:07.065Z",
+  updatedAt: "2026-06-08T11:24:09.065Z",
+};
