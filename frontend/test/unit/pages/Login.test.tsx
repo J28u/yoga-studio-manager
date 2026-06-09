@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import Login from "../../src/pages/Login";
+import Login from "../../../src/pages/Login";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MOCK_LOGIN_CREDENTIALS } from "../__mocks__/fixtures";
-import { authService } from "../../src/services/auth.service";
+import { MOCK_LOGIN_CREDENTIALS } from "../../__mocks__/fixtures";
+import { authService } from "../../../src/services/auth.service";
 import { AxiosError, AxiosResponse } from "axios";
 
-vi.mock("../../src/services/auth.service");
+vi.mock("../../../src/services/auth.service");
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {

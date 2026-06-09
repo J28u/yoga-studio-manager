@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { authService } from "../../src/services/auth.service";
-import { AuthResponse, LoginCredentials } from "../../src/types";
-import { server } from "../__mocks__/server";
+import { authService } from "../../../src/services/auth.service";
+import { AuthResponse, LoginCredentials } from "../../../src/types";
+import { server } from "../../__mocks__/server";
 import { http, HttpResponse } from "msw";
 import {
   MOCK_AUTH_RESPONSE_ADMIN,
   MOCK_AUTH_RESPONSE_USER,
   MOCK_LOGIN_CREDENTIALS,
   MOCK_REGISTER_DATA,
-} from "../__mocks__/fixtures";
+} from "../../__mocks__/fixtures";
 
 describe("authService.login", () => {
   beforeEach(() => localStorage.clear());

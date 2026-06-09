@@ -1,19 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import Sessions from "../../src/pages/Sessions";
+import Sessions from "../../../src/pages/Sessions";
 import { MemoryRouter } from "react-router-dom";
-import { authService } from "../../src/services/auth.service";
+import { authService } from "../../../src/services/auth.service";
 import {
   MOCK_AUTH_RESPONSE_ADMIN,
   MOCK_AUTH_RESPONSE_USER,
   MOCK_SESSIONS_RESPONSE,
-} from "../__mocks__/fixtures";
-import { server } from "../__mocks__/server";
+} from "../../__mocks__/fixtures";
+import { server } from "../../__mocks__/server";
 import { http, HttpResponse } from "msw";
 import { render, screen } from "@testing-library/react";
-import { Session } from "../../src/types";
+import { Session } from "../../../src/types";
 import userEvent from "@testing-library/user-event";
 
-vi.mock("../../src/services/auth.service");
+vi.mock("../../../src/services/auth.service");
 
 describe("Sessions", () => {
   beforeEach(() => vi.clearAllMocks());

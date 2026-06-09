@@ -1,19 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import Profile from "../../src/pages/Profile";
-import { authService } from "../../src/services/auth.service";
+import Profile from "../../../src/pages/Profile";
+import { authService } from "../../../src/services/auth.service";
 import {
   MOCK_AUTH_RESPONSE_ADMIN,
   MOCK_AUTH_RESPONSE_USER,
   MOCK_USER_RESPONSE_ADMIN,
   MOCK_USER_RESPONSE_USER,
-} from "../__mocks__/fixtures";
+} from "../../__mocks__/fixtures";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { server } from "../__mocks__/server";
+import { server } from "../../__mocks__/server";
 import { http, HttpResponse } from "msw";
 import userEvent from "@testing-library/user-event";
 
-vi.mock("../../src/services/auth.service");
+vi.mock("../../../src/services/auth.service");
 
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {

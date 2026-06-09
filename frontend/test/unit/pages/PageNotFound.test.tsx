@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import PageNotFound from "../../src/pages/PageNotFound";
+import PageNotFound from "../../../src/pages/PageNotFound";
 
 describe("PageNotFound", () => {
   it("should render correctly", () => {

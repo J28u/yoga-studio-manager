@@ -1,10 +1,10 @@
-import PrivateRoute from "../../src/components/PrivateRoute";
+import PrivateRoute from "../../../src/components/PrivateRoute";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { authService } from "../../src/services/auth.service";
+import { authService } from "../../../src/services/auth.service";
 import { Routes, MemoryRouter, Route } from "react-router-dom";
 import { screen, render } from "@testing-library/react";
 
-vi.mock("../../src/services/auth.service");
+vi.mock("../../../src/services/auth.service");
 
 describe("PrivateRoute", () => {
   beforeEach(() => {

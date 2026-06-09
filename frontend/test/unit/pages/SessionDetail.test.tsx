@@ -1,24 +1,24 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import SessionDetail from "../../src/pages/SessionDetail";
+import SessionDetail from "../../../src/pages/SessionDetail";
 import { MemoryRouter } from "react-router-dom";
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import { authService } from "../../src/services/auth.service";
+import { authService } from "../../../src/services/auth.service";
 import {
   MOCK_AUTH_RESPONSE_ADMIN,
   MOCK_AUTH_RESPONSE_USER,
   MOCK_SESSION_RESPONSE,
   MOCK_SESSION_RESPONSE_USER_JOINED,
-} from "../__mocks__/fixtures";
-import { server } from "../__mocks__/server";
+} from "../../__mocks__/fixtures";
+import { server } from "../../__mocks__/server";
 import userEvent from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { Route, Routes } from "react-router-dom";
 
-vi.mock("../../src/services/auth.service");
+vi.mock("../../../src/services/auth.service");
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
