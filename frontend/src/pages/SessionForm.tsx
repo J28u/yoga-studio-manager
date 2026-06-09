@@ -30,7 +30,7 @@ const SessionForm = (): JSX.Element => {
   const user = authService.getCurrentUser();
   const token = authService.getToken();
 
-  if (!user || !user.admin) return <Navigate to="/session" />;
+  if (!user || !user.admin) return <Navigate to="/sessions" />;
 
   const fetchTeachers = useCallback(
     async (signal: AbortSignal): Promise<void> => {

@@ -88,7 +88,7 @@ describe("SessionForm", () => {
       <MemoryRouter initialEntries={["/sessions/create"]}>
         <Routes>
           <Route path="/sessions/create" element={<SessionForm />} />
-          <Route path="/session" element={<div>redirected</div>} />
+          <Route path="/sessions" element={<div>redirected</div>} />
         </Routes>
       </MemoryRouter>,
     );
@@ -103,7 +103,7 @@ describe("SessionForm", () => {
       <MemoryRouter initialEntries={["/sessions/create"]}>
         <Routes>
           <Route path="/sessions/create" element={<SessionForm />} />
-          <Route path="/session" element={<div>redirected</div>} />
+          <Route path="/sessions" element={<div>redirected</div>} />
         </Routes>
       </MemoryRouter>,
     );
