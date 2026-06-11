@@ -58,7 +58,7 @@ export class SessionController {
 
   async delete(req: AuthenticatedRequest, res: Response): Promise<void> {
     const { id } = parseRequest(req.params, IdSchema);
-    await this.sessionService.detete(req.userId, id);
+    await this.sessionService.delete(req.userId, id);
     res.status(200).json({ message: "Session deleted successfully" });
   }
 
