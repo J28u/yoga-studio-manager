@@ -1,5 +1,5 @@
 import { useState, useEffect, JSX, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { User, ApiSuccessResponse } from "../types";
@@ -35,7 +35,7 @@ const Profile = (): JSX.Element | null => {
         setLoading(false);
       }
     },
-    [user?.id, token],
+    [user?.id],
   );
 
   useEffect(() => {
@@ -119,7 +119,12 @@ const Profile = (): JSX.Element | null => {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">My Profile</h1>
+          <h1
+            className="text-3xl font-bold text-gray-800 mb-8"
+            data-cy="profile-title"
+          >
+            My Profile
+          </h1>
 
           <div className="space-y-4 mb-8">
             <div className="border-b pb-4">
@@ -193,12 +198,13 @@ const Profile = (): JSX.Element | null => {
           </div>
 
           <div className="flex space-x-4">
-            <button
-              onClick={() => navigate("/sessions")}
+            <Link
+              to="/sessions"
+              data-cy="back-link"
               className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
             >
               Back to Sessions
-            </button>
+            </Link>
             <button
               onClick={handleDeleteAccount}
               className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"

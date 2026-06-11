@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "email": "yoga@studio.com",
+  "firstName": "Adriene",
+  "lastName": "Doe",
+  "admin": true,
+  "createdAt": "2026-05-20T11:24:07.065Z",
+  "updatedAt": "2026-05-21T12:25:19.065Z"
+}

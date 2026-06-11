@@ -6,7 +6,7 @@ import {
   SubmitEvent,
   useCallback,
 } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { Teacher, Session, SessionFormData, FormFieldElement } from "../types";
@@ -30,7 +30,7 @@ const SessionForm = (): JSX.Element => {
   const user = authService.getCurrentUser();
   const token = authService.getToken();
 
-  if (!user || !user.admin) return <Navigate to="/session" />;
+  if (!user || !user.admin) return <Navigate to="/sessions" />;
 
   const fetchTeachers = useCallback(
     async (signal: AbortSignal): Promise<void> => {
@@ -47,7 +47,7 @@ const SessionForm = (): JSX.Element => {
         console.error("Failed to fetch teachers", err);
       }
     },
-    [token],
+    [],
   );
 
   const fetchSession = useCallback(
@@ -72,7 +72,7 @@ const SessionForm = (): JSX.Element => {
         console.error(err);
       }
     },
-    [id, token],
+    [id],
   );
 
   useEffect(() => {
@@ -129,7 +129,10 @@ const SessionForm = (): JSX.Element => {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          <h1
+            data-cy="session-form-title"
+            className="text-3xl font-bold text-gray-800 mb-8"
+          >
             {isEditMode ? "Edit Session" : "Create New Session"}
           </h1>
 
@@ -141,10 +144,15 @@ const SessionForm = (): JSX.Element => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="sessionName"
+                data-cy="name"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Session Name
               </label>
               <input
+                id="sessionName"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -155,10 +163,15 @@ const SessionForm = (): JSX.Element => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="date"
+                data-cy="date"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Date
               </label>
               <input
+                id="date"
                 type="date"
                 name="date"
                 value={formData.date}
@@ -169,11 +182,17 @@ const SessionForm = (): JSX.Element => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="teacher"
+                data-cy="teacher"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Teacher
               </label>
               <select
+                id="teacher"
                 name="teacherId"
+                data-cy="teacher-id"
                 value={formData.teacherId}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
@@ -189,10 +208,15 @@ const SessionForm = (): JSX.Element => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label
+                htmlFor="description"
+                data-cy="description"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
                 Description
               </label>
               <textarea
+                id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -205,6 +229,7 @@ const SessionForm = (): JSX.Element => {
             <div className="flex space-x-4">
               <button
                 type="submit"
+                data-cy="submit-button"
                 disabled={loading}
                 className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400"
               >
@@ -214,13 +239,13 @@ const SessionForm = (): JSX.Element => {
                     ? "Update Session"
                     : "Create Session"}
               </button>
-              <button
+              <Link
                 type="button"
-                onClick={() => navigate("/sessions")}
+                to="/sessions"
                 className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400"
               >
                 Cancel
-              </button>
+              </Link>
             </div>
           </form>
         </div>

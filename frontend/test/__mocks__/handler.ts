@@ -1,0 +1,115 @@
+import { http, HttpResponse } from "msw";
+import { AuthResponse } from "../../src/types";
+import {
+  MOCK_USER_RESPONSE_USER,
+  MOCK_USER_RESPONSE_ADMIN,
+  MOCK_SESSION_RESPONSE,
+  MOCK_TEACHER_RESPONSE,
+  MOCK_SESSIONS_RESPONSE,
+} from "./fixtures";
+
+export const handlers = [
+  http.post<{}, { email: string; password: string }>(
+    "/api/auth/login",
+    async ({ request }) => {
+      const body = await request.json();
+      const response: AuthResponse = {
+        id: 1,
+        email: body.email,
+        firstName: "Adriene",
+        lastName: "Doe",
+        admin: true,
+        token: "fakeToken1234M",
+      };
+      return HttpResponse.json(response, { status: 200 });
+    },
+  ),
+
+  http.post<
+    {},
+    { email: string; firstName: string; lastName: string; password: string }
+  >("/api/auth/register", async ({ request }) => {
+    const body = await request.json();
+    const response: AuthResponse = {
+      id: 2,
+      email: body.email,
+      firstName: "Benji",
+      lastName: "Doe",
+      admin: false,
+      token: "fakeToken1234M",
+    };
+
+    return HttpResponse.json(response, { status: 201 });
+  }),
+
+  http.get<{ id: string }>("/api/user/:id", async ({ params }) => {
+    const { id } = params;
+    if (Number(id) === 1)
+      return HttpResponse.json(MOCK_USER_RESPONSE_ADMIN, { status: 200 });
+    if (Number(id) === 2)
+      return HttpResponse.json(MOCK_USER_RESPONSE_USER, { status: 200 });
+
+    return HttpResponse.json({ message: "User not found" }, { status: 404 });
+  }),
+
+  http.post("/api/user/promote-admin", () => {
+    return HttpResponse.json(
+      { ...MOCK_USER_RESPONSE_USER, admin: true },
+      { status: 200 },
+    );
+  }),
+
+  http.delete<{ id: string }>("/api/user/:id", () => {
+    return HttpResponse.json(
+      { message: "User deleted successfully" },
+      { status: 200 },
+    );
+  }),
+
+  http.get<{ id: string }>("/api/session/:id", () => {
+    return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 200 });
+  }),
+
+  http.delete<{ id: string }>("/api/session/:id", () => {
+    return HttpResponse.json(
+      { message: "Session deleted successfully" },
+      { status: 200 },
+    );
+  }),
+
+  http.post<{ id: string; idUser: string }>(
+    "/api/session/:id/participate/:userId",
+    () => {
+      return HttpResponse.json(
+        { message: "Successfully joined the session" },
+        { status: 200 },
+      );
+    },
+  ),
+
+  http.delete<{ id: string; userId: string }>(
+    "/api/session/:id/participate/:userId",
+    () => {
+      return HttpResponse.json(
+        { message: "Successfully left the session" },
+        { status: 200 },
+      );
+    },
+  ),
+
+  http.get("/api/teacher", () => {
+    return HttpResponse.json(MOCK_TEACHER_RESPONSE, { status: 200 });
+  }),
+
+  http.post("/api/session", () => {
+    return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 201 });
+  }),
+
+  http.put<{ id: string }>("/api/session/:id", () => {
+    return HttpResponse.json(MOCK_SESSION_RESPONSE, { status: 200 });
+  }),
+
+  http.get("api/session", () => {
+    return HttpResponse.json(MOCK_SESSIONS_RESPONSE, { status: 200 });
+  }),
+];

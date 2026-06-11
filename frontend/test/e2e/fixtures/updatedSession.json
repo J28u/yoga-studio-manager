@@ -1,0 +1,10 @@
+{
+  "id": 3,
+  "name": "Morning Slow Flow",
+  "date": "2026-06-09T10:24:09.065Z",
+  "description": "Amplify your morning ritual with this mindfulness based slow flow.",
+  "teacher": { "id": 1, "firstName": "Margot", "lastName": "Delahaye" },
+  "users": [3, 4, 5, 6],
+  "createdAt": "2026-06-08T10:24:07.065Z",
+  "updatedAt": "2026-06-09T09:12:10.065Z"
+}

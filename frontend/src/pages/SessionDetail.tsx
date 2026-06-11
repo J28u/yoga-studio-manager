@@ -1,5 +1,5 @@
 import { useState, useEffect, JSX, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
 import { ApiSuccessResponse, Session } from "../types";
@@ -33,7 +33,7 @@ const SessionDetail = (): JSX.Element | null => {
         setLoading(false);
       }
     },
-    [id, token],
+    [id],
   );
 
   useEffect(() => {
@@ -128,7 +128,10 @@ const SessionDetail = (): JSX.Element | null => {
           </h1>
 
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            <h2
+              data-cy="session-details-title"
+              className="text-xl font-semibold text-gray-700 mb-2"
+            >
               Details
             </h2>
             <div className="space-y-2 text-gray-600">
@@ -163,12 +166,13 @@ const SessionDetail = (): JSX.Element | null => {
           <div className="flex space-x-4">
             {user?.admin ? (
               <>
-                <button
-                  onClick={() => navigate(`/sessions/edit/${id}`)}
+                <Link
+                  to={`/sessions/edit/${id}`}
+                  data-cy="edit-link"
                   className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700"
                 >
                   Edit
-                </button>
+                </Link>
                 <button
                   onClick={handleDelete}
                   className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
@@ -196,12 +200,12 @@ const SessionDetail = (): JSX.Element | null => {
               </>
             )}
 
-            <button
-              onClick={() => navigate("/sessions")}
+            <Link
+              to="/sessions"
               className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400"
             >
               Back to Sessions
-            </button>
+            </Link>
           </div>
         </div>
       </div>

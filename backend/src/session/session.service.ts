@@ -137,7 +137,7 @@ export class SessionService {
     };
   }
 
-  async detete(userId: number, sessionId: number): Promise<void> {
+  async delete(userId: number, sessionId: number): Promise<void> {
     const user = await this.userRepository.findOne(userId);
     assertIsAdmin(user);
 
