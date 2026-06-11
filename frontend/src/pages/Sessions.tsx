@@ -1,4 +1,4 @@
-import { useState, useEffect, JSX, useCallback, useRef } from "react";
+import { useState, useEffect, JSX, useCallback } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
