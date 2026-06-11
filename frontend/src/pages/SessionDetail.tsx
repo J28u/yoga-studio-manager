@@ -33,7 +33,7 @@ const SessionDetail = (): JSX.Element | null => {
         setLoading(false);
       }
     },
-    [id, token],
+    [id],
   );
 
   useEffect(() => {
@@ -128,7 +128,10 @@ const SessionDetail = (): JSX.Element | null => {
           </h1>
 
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            <h2
+              data-cy="session-details-title"
+              className="text-xl font-semibold text-gray-700 mb-2"
+            >
               Details
             </h2>
             <div className="space-y-2 text-gray-600">
@@ -165,6 +168,7 @@ const SessionDetail = (): JSX.Element | null => {
               <>
                 <Link
                   to={`/sessions/edit/${id}`}
+                  data-cy="edit-link"
                   className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700"
                 >
                   Edit

@@ -47,7 +47,7 @@ const SessionForm = (): JSX.Element => {
         console.error("Failed to fetch teachers", err);
       }
     },
-    [token],
+    [],
   );
 
   const fetchSession = useCallback(
@@ -72,7 +72,7 @@ const SessionForm = (): JSX.Element => {
         console.error(err);
       }
     },
-    [id, token],
+    [id],
   );
 
   useEffect(() => {
@@ -129,7 +129,10 @@ const SessionForm = (): JSX.Element => {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          <h1
+            data-cy="session-form-title"
+            className="text-3xl font-bold text-gray-800 mb-8"
+          >
             {isEditMode ? "Edit Session" : "Create New Session"}
           </h1>
 
@@ -143,6 +146,7 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-4">
               <label
                 htmlFor="sessionName"
+                data-cy="name"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Session Name
@@ -161,6 +165,7 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-4">
               <label
                 htmlFor="date"
+                data-cy="date"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Date
@@ -179,6 +184,7 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-4">
               <label
                 htmlFor="teacher"
+                data-cy="teacher"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Teacher
@@ -186,6 +192,7 @@ const SessionForm = (): JSX.Element => {
               <select
                 id="teacher"
                 name="teacherId"
+                data-cy="teacher-id"
                 value={formData.teacherId}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
@@ -203,6 +210,7 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-6">
               <label
                 htmlFor="description"
+                data-cy="description"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Description
@@ -221,6 +229,7 @@ const SessionForm = (): JSX.Element => {
             <div className="flex space-x-4">
               <button
                 type="submit"
+                data-cy="submit-button"
                 disabled={loading}
                 className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400"
               >

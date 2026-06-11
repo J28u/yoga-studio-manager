@@ -1,4 +1,4 @@
-import { useState, useEffect, JSX, useCallback } from "react";
+import { useState, useEffect, JSX, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import { authService } from "../services/auth.service";
@@ -31,7 +31,7 @@ const Sessions = (): JSX.Element => {
         setLoading(false);
       }
     },
-    [token],
+    [],
   );
 
   useEffect(() => {
@@ -80,10 +80,16 @@ const Sessions = (): JSX.Element => {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Yoga Sessions</h1>
+          <h1
+            data-cy="sessions-title"
+            className="text-3xl font-bold text-gray-800"
+          >
+            Yoga Sessions
+          </h1>
           {user && user.admin && (
             <Link
               to="/sessions/create"
+              data-cy="create-session-link"
               className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
             >
               Create Session
@@ -100,6 +106,7 @@ const Sessions = (): JSX.Element => {
             {sessions.map((session: Session) => (
               <div
                 key={session.id}
+                data-cy={`session-${session.id}`}
                 className="bg-white rounded-lg shadow-md p-6 flex flex-col"
               >
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -122,6 +129,7 @@ const Sessions = (): JSX.Element => {
                 <div className="flex space-x-2">
                   <Link
                     to={`/sessions/${session.id}`}
+                    data-cy={`session-${session.id}-details-link`}
                     className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded text-center hover:bg-indigo-700"
                   >
                     View Details
@@ -130,6 +138,7 @@ const Sessions = (): JSX.Element => {
                   {user && user.admin && (
                     <button
                       onClick={() => handleDelete(session.id)}
+                      data-cy={`session-${session.id}-delete-button`}
                       className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                     >
                       Delete
