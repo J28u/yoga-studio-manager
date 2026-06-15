@@ -29,7 +29,7 @@ export class UserService {
     if (userId !== id)
       throw new ForbiddenError("You can only delete your own account");
 
-    const user = this.userRepository.findOne(userId);
+    const user = await this.userRepository.findOne(userId);
     if (!user) throw new NotFoundError("User not found");
 
     await this.userRepository.delete(userId);
