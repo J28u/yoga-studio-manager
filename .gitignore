@@ -29,7 +29,7 @@ build/
 Thumbs.db
 
 # Testing
-coverage/
+# coverage/
 *.lcov
 
 # Logs
