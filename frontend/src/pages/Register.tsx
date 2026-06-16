@@ -66,6 +66,7 @@ const Register = (): JSX.Element => {
               id="firstName"
               type="text"
               name="firstName"
+              data-cy="firstName"
               value={formData.firstName}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
@@ -82,6 +83,7 @@ const Register = (): JSX.Element => {
             </label>
             <input
               id="lastName"
+              data-cy="lastName"
               type="text"
               name="lastName"
               value={formData.lastName}
@@ -100,6 +102,7 @@ const Register = (): JSX.Element => {
             </label>
             <input
               id="email"
+              data-cy="email"
               type="email"
               name="email"
               value={formData.email}
@@ -118,6 +121,7 @@ const Register = (): JSX.Element => {
             </label>
             <input
               id="password"
+              data-cy="password"
               type="password"
               name="password"
               value={formData.password}
@@ -130,6 +134,7 @@ const Register = (): JSX.Element => {
 
           <button
             type="submit"
+            data-cy="register-button"
             disabled={loading}
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400"
           >
@@ -139,7 +144,11 @@ const Register = (): JSX.Element => {
 
         <p className="mt-4 text-center text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-indigo-600 hover:text-indigo-800">
+          <Link
+            to="/login"
+            data-cy="login-link"
+            className="text-indigo-600 hover:text-indigo-800"
+          >
             Login here
           </Link>
         </p>

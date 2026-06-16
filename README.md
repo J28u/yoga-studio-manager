@@ -1,330 +1,261 @@
-# Yoga Studio Management System
+# Yoga Studio Manager
 
-A full-stack web application for managing yoga studio operations, including session scheduling, teacher management, and user registrations.
-
-## Tech Stack
-
-### Backend
-- Node.js 22 LTS
-- Express.js 4.x
-- TypeScript 5.4+ (Strict Mode)
-- Prisma ORM
-- PostgreSQL 16
-- Zod (validation)
-- JWT (authentication)
-- bcrypt (password hashing)
-
-### Frontend
-- React 19 (Hooks only)
-- TypeScript 5.9+ (Strict Mode)
-- Vite 7.x
-- TailwindCSS 4.x
-- React Router 6.x
-- Axios
-
-### Infrastructure
-- Docker + Docker Compose
-- PostgreSQL container
-
-## Features
-
-### Authentication
-- User registration
-- User login with JWT tokens
-
-### Sessions Management
-- List all yoga sessions
-- View session details
-- Create new sessions (admin only)
-- Update sessions (admin only)
-- Delete sessions (admin only)
-- Join/leave sessions (regular users)
-
-### Teachers
-- View list of teachers
-- View teacher details
-
-### User Profile
-- View user profile
-- Delete user account
+A full-stack web application for managing yoga studio activities, including authentication, session management, teacher management, and user participation.
 
 ## Prerequisites
 
-- Node.js 22 LTS or higher
+Before starting, make sure you have installed:
+
+- Node.js 22+
 - Docker and Docker Compose
-- npm or yarn
+- npm
 
-## Installation
+---
 
-### 1. Clone the repository
+# Installation
+
+## 1. Clone the repository
 
 ```bash
-cd p4-dfsjs-starter
+git clone https://github.com/J28u/yoga-studio-manager.git
+cd yoga-studio-manager
 ```
 
-### 2. Install Backend Dependencies
+## 2. Install dependencies
+
+### Backend
 
 ```bash
 cd backend
 npm install
 ```
 
-### 3. Install Frontend Dependencies
+### Frontend
 
 ```bash
 cd ../frontend
 npm install
 ```
 
-### 4. Set up Environment Variables
+---
 
-Create a `.env` file in the `backend` directory:
+# Environment Configuration
 
-```bash
-cd ../backend
-cp .env.example .env
-```
+The backend uses two environment files:
 
-The default configuration should work with Docker Compose:
+## Development Environment
+
+Create a `backend/.env` file:
 
 ```env
 DATABASE_URL="postgresql://yogauser:yogapass@localhost:5432/yogastudio"
-JWT_SECRET="your-secret-key-change-me-in-production"
+JWT_SECRET="your-secret-key"
 PORT=8080
 NODE_ENV=development
 ```
 
-### 5. Start PostgreSQL with Docker
+## Test Environment
 
-From the project root:
+Create a `backend/.env.test` file:
 
-```bash
-docker-compose up -d
+```env
+DATABASE_URL="postgresql://yogauser:yogapass@localhost:5433/yogastudio_test"
+JWT_SECRET="your-secret-key"
+NODE_ENV=test
 ```
 
-This will start a PostgreSQL container on port 5432.
+---
 
-### 6. Run Database Migrations
+# Database Setup
+
+The project uses Docker Compose to start two PostgreSQL databases:
+
+| Database        | Purpose     | Port |
+| --------------- | ----------- | ---- |
+| yogastudio      | Development | 5432 |
+| yogastudio_test | Testing     | 5433 |
+
+Start the containers:
 
 ```bash
-cd backend
+docker compose up -d
+```
+
+Verify that the containers are running:
+
+```bash
+docker ps
+```
+
+---
+
+# Database Initialization
+
+From the `backend` directory:
+
+## Development Database
+
+Run migrations:
+
+```bash
 npm run prisma:migrate
 ```
 
-### 7. Seed the Database
+Seed the database:
 
 ```bash
 npm run prisma:seed
 ```
 
-This will create:
-- 1 admin user: `yoga@studio.com` / `test!1234`
-- 1 regular user: `user@test.com` / `test!1234`
-- 3 teachers
-- 4 yoga sessions
+## Test Database
 
-## Running the Application
+Apply migrations to the test database:
 
-### Start the Backend (Terminal 1)
+```bash
+npm run migrate:test
+```
+
+---
+
+# Running the Application
+
+## Start the Backend
 
 ```bash
 cd backend
 npm run dev
 ```
 
-The API will run on `http://localhost:8080`
+Backend available at:
 
-### Start the Frontend (Terminal 2)
+```text
+http://localhost:8080
+```
+
+## Start the Frontend
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-The frontend will run on `http://localhost:3000`
+Frontend available at:
 
-## Default Credentials
-
-**Admin User:**
-- Email: `yoga@studio.com`
-- Password: `test!1234`
-
-**Regular User:**
-- Email: `user@test.com`
-- Password: `test!1234`
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login and get JWT token
-
-### Sessions
-- `GET /api/session` - Get all sessions (protected)
-- `GET /api/session/:id` - Get session by ID (protected)
-- `POST /api/session` - Create session (admin only)
-- `PUT /api/session/:id` - Update session (admin only)
-- `DELETE /api/session/:id` - Delete session (admin only)
-- `POST /api/session/:id/participate/:userId` - Join session (protected)
-- `DELETE /api/session/:id/participate/:userId` - Leave session (protected)
-
-### Teachers
-- `GET /api/teacher` - Get all teachers (protected)
-- `GET /api/teacher/:id` - Get teacher by ID (protected)
-
-### Users
-- `GET /api/user/:id` - Get user by ID (protected)
-- `DELETE /api/user/:id` - Delete user account (protected)
-
-## Database Schema
-
-```prisma
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  firstName String
-  lastName  String
-  password  String
-  admin     Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sessions  SessionParticipation[]
-}
-
-model Teacher {
-  id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sessions  Session[]
-}
-
-model Session {
-  id          Int       @id @default(autoincrement())
-  name        String
-  date        DateTime
-  description String
-  teacherId   Int
-  teacher     Teacher   @relation(fields: [teacherId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  participants SessionParticipation[]
-}
-
-model SessionParticipation {
-  sessionId Int
-  userId    Int
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([sessionId, userId])
-}
+```text
+http://localhost:3000
 ```
 
-## Development Scripts
+---
 
-### Backend
+# Demo Accounts
+
+## Administrator
+
+```text
+Email: yoga@studio.com
+Password: test!1234
+```
+
+## Regular User
+
+```text
+Email: user@test.com
+Password: test!1234
+```
+
+---
+
+# Running Tests
+
+## Backend Tests (Unit and Integration)
 
 ```bash
-npm run dev          # Start development server with nodemon
-npm run build        # Build TypeScript to JavaScript
-npm start            # Start production server
-npm run prisma:generate  # Generate Prisma client
-npm run prisma:migrate   # Run database migrations
-npm run prisma:seed      # Seed the database
-npm run prisma:studio    # Open Prisma Studio
+cd backend
+npm test
 ```
 
-### Frontend
+## Frontend Tests
+
+Run Vitest:
 
 ```bash
-npm run dev          # Start Vite development server
-npm run build        # Build for production
-npm run preview      # Preview production build
+cd frontend
+npm test
 ```
 
-## Project Structure
+## End-to-End Tests (Cypress)
 
-```
-p4-dfsjs-starter/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/      # Request handlers
-│   │   ├── middleware/       # Auth middleware
-│   │   ├── dto/              # Zod validation schemas
-│   │   ├── utils/            # JWT utilities
-│   │   ├── routes/           # API routes
-│   │   └── app.ts            # Express app setup
-│   ├── prisma/
-│   │   ├── schema.prisma     # Database schema
-│   │   └── seed.ts           # Database seeding
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .env
-├── frontend/
-│   ├── src/
-│   │   ├── pages/            # React page components
-│   │   ├── components/       # Reusable components
-│   │   ├── services/         # API services
-│   │   ├── types/            # TypeScript types
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── package.json
-│   ├── vite.config.ts
-│   └── tailwind.config.js
-├── docker-compose.yml
-└── README.md
-```
+Open Cypress:
 
-## Testing
-
-The project supports comprehensive testing with the following frameworks:
-- **Unit tests**: For testing individual components and utilities
-- **Integration tests**: For testing API endpoints
-- **End-to-end tests**: For testing critical user flows
-
-Run tests with the appropriate npm scripts in each directory.
-
-## Troubleshooting
-
-### Database connection issues
 ```bash
-# Check if PostgreSQL is running
-docker ps
-
-# Restart PostgreSQL
-docker-compose restart postgres
-
-# View logs
-docker-compose logs postgres
+cd frontend
+npx cypress open
 ```
 
-### Port already in use
+Run Cypress in headless mode:
+
 ```bash
-# Check what's using port 8080
-lsof -i :8080
-
-# Check what's using port 3000
-lsof -i :3000
-
-# Kill the process if needed
-kill -9 <PID>
+npx cypress run
 ```
 
-### Prisma issues
+---
+
+# Coverage Reports
+
+## Backend Coverage
+
+Generate the coverage report:
+
 ```bash
-# Reset database (WARNING: deletes all data)
-npx prisma migrate reset
-
-# Regenerate Prisma client
-npx prisma generate
+cd backend
+npm run test:coverage
 ```
 
-## Contributing
+The HTML report is generated in:
 
-Please follow the existing code style and ensure all tests pass before submitting changes.
+```text
+coverage/index.html
+```
 
-## License
+## Frontend Coverage
 
-MIT
+Generate the coverage report:
+
+```bash
+cd frontend
+npm run test:coverage
+```
+
+The HTML report is generated in:
+
+```text
+coverage/index.html
+```
+
+---
+
+# Useful Scripts
+
+## Backend
+
+```bash
+npm run dev
+npm run build
+npm start
+npm test
+npm run test:coverage
+npm run prisma:migrate
+npm run prisma:seed
+npm run migrate:test
+```
+
+## Frontend
+
+```bash
+npm run dev
+npm run build
+npm test
+npm run test:coverage
+npx cypress open
+npx cypress run
+```

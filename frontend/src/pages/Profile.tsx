@@ -128,28 +128,40 @@ const Profile = (): JSX.Element | null => {
 
           <div className="space-y-4 mb-8">
             <div className="border-b pb-4">
-              <label className="block text-gray-600 text-sm font-semibold mb-1">
+              <label
+                className="block text-gray-600 text-sm font-semibold mb-1"
+                data-cy="firstName"
+              >
                 First Name
               </label>
               <p className="text-lg text-gray-800">{userInfo.firstName}</p>
             </div>
 
             <div className="border-b pb-4">
-              <label className="block text-gray-600 text-sm font-semibold mb-1">
+              <label
+                className="block text-gray-600 text-sm font-semibold mb-1"
+                data-cy="lastName"
+              >
                 Last Name
               </label>
               <p className="text-lg text-gray-800">{userInfo.lastName}</p>
             </div>
 
             <div className="border-b pb-4">
-              <label className="block text-gray-600 text-sm font-semibold mb-1">
+              <label
+                className="block text-gray-600 text-sm font-semibold mb-1"
+                data-cy="email"
+              >
                 Email
               </label>
               <p className="text-lg text-gray-800">{userInfo.email}</p>
             </div>
 
             <div className="border-b pb-4">
-              <label className="block text-gray-600 text-sm font-semibold mb-1">
+              <label
+                className="block text-gray-600 text-sm font-semibold mb-1"
+                data-cy="accountType"
+              >
                 Account Type
               </label>
               <p className="text-lg text-gray-800">
@@ -182,7 +194,10 @@ const Profile = (): JSX.Element | null => {
             </div>
 
             <div className="border-b pb-4">
-              <label className="block text-gray-600 text-sm font-semibold mb-1">
+              <label
+                data-cy="date"
+                className="block text-gray-600 text-sm font-semibold mb-1"
+              >
                 Member Since
               </label>
               <p className="text-lg text-gray-800">
@@ -207,6 +222,7 @@ const Profile = (): JSX.Element | null => {
             </Link>
             <button
               onClick={handleDeleteAccount}
+              data-cy="delete-button"
               className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
             >
               Delete Account

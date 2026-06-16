@@ -1,8 +1,0 @@
-{
-  "id": 1,
-  "email": "yoga@studio.com",
-  "firstName": "Adriene",
-  "lastName": "Doe",
-  "admin": true,
-  "token": "fakeToken1234M"
-}
