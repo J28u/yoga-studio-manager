@@ -4,9 +4,9 @@ export default defineConfig({
   allowCypressEnv: false,
 
   e2e: {
-    specPattern: "test/e2e/**/*.cy.ts",
-    supportFile: "test/e2e/support/e2e.ts",
-    fixturesFolder: "test/e2e/fixtures",
+    specPattern: "tests/e2e/**/*.cy.ts",
+    supportFile: "tests/e2e/support/e2e.ts",
+    fixturesFolder: "tests/e2e/fixtures",
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
