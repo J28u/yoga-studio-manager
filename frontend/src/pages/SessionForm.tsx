@@ -146,7 +146,6 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-4">
               <label
                 htmlFor="sessionName"
-                data-cy="name"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Session Name
@@ -155,6 +154,7 @@ const SessionForm = (): JSX.Element => {
                 id="sessionName"
                 type="text"
                 name="name"
+                data-cy="name"
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
@@ -165,13 +165,13 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-4">
               <label
                 htmlFor="date"
-                data-cy="date"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Date
               </label>
               <input
                 id="date"
+                data-cy="date"
                 type="date"
                 name="date"
                 value={formData.date}
@@ -210,7 +210,6 @@ const SessionForm = (): JSX.Element => {
             <div className="mb-6">
               <label
                 htmlFor="description"
-                data-cy="description"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Description
@@ -218,6 +217,7 @@ const SessionForm = (): JSX.Element => {
               <textarea
                 id="description"
                 name="description"
+                data-cy="description"
                 value={formData.description}
                 onChange={handleChange}
                 rows={6}

@@ -145,17 +145,21 @@ const SessionDetail = (): JSX.Element | null => {
                 })}
               </p>
               <p>
-                <strong>Teacher:</strong> {session.teacher.firstName}{" "}
-                {session.teacher.lastName}
+                <strong data-cy="teacher">Teacher:</strong>{" "}
+                {session.teacher.firstName} {session.teacher.lastName}
               </p>
               <p>
-                <strong>Participants:</strong> {session.users.length}
+                <strong data-cy="participants">Participants:</strong>{" "}
+                {session.users.length}
               </p>
             </div>
           </div>
 
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            <h2
+              data-cy="session-description"
+              className="text-xl font-semibold text-gray-700 mb-2"
+            >
               Description
             </h2>
             <p className="text-gray-600 whitespace-pre-wrap">
@@ -185,6 +189,7 @@ const SessionDetail = (): JSX.Element | null => {
                 {isParticipating ? (
                   <button
                     onClick={handleUnparticipate}
+                    data-cy="leave-button"
                     className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
                   >
                     Leave Session
@@ -192,6 +197,7 @@ const SessionDetail = (): JSX.Element | null => {
                 ) : (
                   <button
                     onClick={handleParticipate}
+                    data-cy="join-button"
                     className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
                   >
                     Join Session

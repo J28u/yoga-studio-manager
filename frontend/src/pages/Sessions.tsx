@@ -106,7 +106,7 @@ const Sessions = (): JSX.Element => {
             {sessions.map((session: Session) => (
               <div
                 key={session.id}
-                data-cy={`session-${session.id}`}
+                data-cy="session-card"
                 className="bg-white rounded-lg shadow-md p-6 flex flex-col"
               >
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -129,7 +129,7 @@ const Sessions = (): JSX.Element => {
                 <div className="flex space-x-2">
                   <Link
                     to={`/sessions/${session.id}`}
-                    data-cy={`session-${session.id}-details-link`}
+                    data-cy="session-details-link"
                     className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded text-center hover:bg-indigo-700"
                   >
                     View Details
@@ -138,7 +138,7 @@ const Sessions = (): JSX.Element => {
                   {user && user.admin && (
                     <button
                       onClick={() => handleDelete(session.id)}
-                      data-cy={`session-${session.id}-delete-button`}
+                      data-cy="session-delete-button"
                       className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                     >
                       Delete
