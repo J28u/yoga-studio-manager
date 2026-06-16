@@ -17,11 +17,11 @@ import { ParticipationRepository } from "../participation/participation.reposito
 import { SessionService } from "../session/session.service";
 import { TeacherService } from "../teacher/teacher.service";
 import { UserService } from "../user/user.service";
+import { prisma } from "../../src/prisma";
 
 const router = Router();
 
 // Repositories
-const prisma = new PrismaClient();
 const userRepository = new UserRepository(prisma);
 const sessionRepository = new SessionRepository(prisma);
 const teacherRepository = new TeacherRepository(prisma);

@@ -38,7 +38,7 @@ export class SessionService {
     }));
   }
 
-  async getBydId(id: number): Promise<SessionResponseDto> {
+  async getById(id: number): Promise<SessionResponseDto> {
     const session = await this.sessionRepository.findOne(id);
     if (!session) throw new NotFoundError("Session not found");
 
@@ -68,7 +68,7 @@ export class SessionService {
     const user = await this.userRepository.findOne(userId);
     assertIsAdmin(user);
 
-    const teacher = this.teacherRepository.findOne(teacherId);
+    const teacher = await this.teacherRepository.findOne(teacherId);
     if (!teacher) throw new NotFoundError("Teacher not found");
 
     const session = await this.sessionRepository.create({

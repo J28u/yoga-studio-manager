@@ -16,7 +16,7 @@ export class SessionController {
 
   async getById(req: AuthenticatedRequest, res: Response): Promise<void> {
     const { id } = parseRequest(req.params, IdSchema);
-    const response = await this.sessionService.getBydId(id);
+    const response = await this.sessionService.getById(id);
     res.status(200).json(response);
   }
 
