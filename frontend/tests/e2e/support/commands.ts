@@ -16,3 +16,14 @@ Cypress.Commands.add("login", (email, password) => {
     .should("be.visible")
     .should("contain", "Yoga Sessions");
 });
+
+Cypress.Commands.add("register", (firstName, lastName, email, password) => {
+  cy.visit("/register");
+  cy.get("[data-cy='firstName']").type(firstName);
+  cy.get("[data-cy='lastName']").type(lastName);
+  cy.get("[data-cy='email']").type(email);
+  cy.get("[data-cy='password']").type(password);
+
+  cy.get("[data-cy='register-button']").click();
+  cy.url().should("include", "/sessions");
+});

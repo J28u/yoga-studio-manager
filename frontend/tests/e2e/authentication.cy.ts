@@ -57,14 +57,12 @@ describe("Authentication", () => {
     });
 
     it("should allow a new user to create an account", () => {
-      cy.visit("/register");
-      cy.get("[data-cy='firstName']").type(faker.person.firstName());
-      cy.get("[data-cy='lastName']").type(faker.person.lastName());
-      cy.get("[data-cy='email']").type(faker.internet.email());
-      cy.get("[data-cy='password']").type(faker.internet.password());
-
-      cy.get("[data-cy='register-button']").click();
-      cy.url().should("include", "/sessions");
+      cy.register(
+        faker.person.firstName(),
+        faker.person.lastName(),
+        faker.internet.email(),
+        faker.internet.password(),
+      );
       cy.get("[data-cy = 'sessions-title']")
         .should("be.visible")
         .should("contain", "Yoga Sessions");
